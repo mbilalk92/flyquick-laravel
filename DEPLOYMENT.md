@@ -104,6 +104,42 @@ RewriteRule ^(.*)$ /flyquick/public/$1 [L]
 
 ---
 
+## Step 2.5 — Set Up the WordPress Blog
+
+The blog is **not** part of this Laravel repo — it's a separate WordPress install. The Laravel app only reads from it: `BlogService` (`app/Services/BlogService.php`) opens a second, read-only MySQL connection (the `blog` connection in `config/database.php`) straight into WordPress's own tables to pull post previews for any page section of type `blog-preview`, and links out to the full post on the live WP site via `BLOG_URL`. There is no proxying, SSO, or shared routing between the two — they're independent apps that happen to share a server and (optionally) a domain.
+
+### 2.5.1 Install WordPress
+
+1. hPanel → **Website → Auto Installer** (or **Hosting → Auto Installer**), search for **WordPress**
+2. Install it to `public_html/blog` so it's reachable at `https://yourdomain.com/blog`
+   - Alternatively use a subdomain (e.g. `blog.yourdomain.com`) if you'd rather keep it off the main domain — just make sure `BLOG_URL` below matches wherever it actually lives
+3. Complete the normal WordPress setup wizard (site title, admin user, etc.)
+4. **Important:** when the installer asks for a **table prefix**, set it to `fly_` (not the default `wp_`). `BlogService.php` has the prefix hardcoded (`fly_posts`, `fly_postmeta`, `fly_terms`, `fly_term_taxonomy`, `fly_term_relationships`) and does not read it from config — if your WP install uses a different prefix, the blog-preview sections will silently show nothing (the query is wrapped in a try/catch that fails quiet).
+   - If WordPress is already installed with a different prefix, you can either reinstall with `fly_`, or rename the tables and update `$table_prefix` in WordPress's own `wp-config.php` to match.
+5. Install whatever theme/plugins you used on the static version, migrate your posts/media over (via an export/import plugin, or by copying the DB + `wp-content/uploads` from your old static-blog host)
+
+### 2.5.2 Point Laravel at the WordPress database
+
+1. In hPanel → **Databases → MySQL Databases**, note the WordPress database's name, username, and password (WordPress's own installer creates this — it's a **separate database** from the Laravel one in Step 2.1)
+2. Add these to Laravel's `.env` (filled in fully in Step 5):
+   ```ini
+   BLOG_DB_HOST=127.0.0.1
+   BLOG_DB_PORT=3306
+   BLOG_DB_DATABASE=u123456_wp_blog
+   BLOG_DB_USERNAME=u123456_wp_user
+   BLOG_DB_PASSWORD=your_wp_db_password
+   BLOG_URL=https://yourdomain.com/blog
+   ```
+3. If you'd rather not give Laravel full read/write access to the WordPress database, create a second MySQL user in hPanel scoped to that same database with **read-only (SELECT)** privileges and use those credentials for `BLOG_DB_USERNAME`/`BLOG_DB_PASSWORD` instead — Laravel's blog queries are select-only.
+
+### 2.5.3 Verify
+
+- `https://yourdomain.com/blog` loads the WordPress site directly
+- A page with a **Blog preview** section (Admin → Content → Pages → edit a page → Sections → add/edit a `blog-preview` section) shows real post cards, not an empty block
+- Each post card's "read more" link lands on the matching WordPress post URL
+
+---
+
 ## Step 3 — Upload Your Files
 
 ### Option A — FTP Upload (simpler)
@@ -177,6 +213,13 @@ DB_PORT=3306
 DB_DATABASE=u123456_flyquick
 DB_USERNAME=u123456_flyquick_user
 DB_PASSWORD=your_db_password
+
+# ── WordPress blog DB (read-only, see Step 2.5) ───────
+BLOG_DB_HOST=127.0.0.1
+BLOG_DB_PORT=3306
+BLOG_DB_DATABASE=u123456_wp_blog
+BLOG_DB_USERNAME=u123456_wp_user
+BLOG_DB_PASSWORD=your_wp_db_password
 
 # ── Cache / Session / Queue ───────────────────────────
 CACHE_DRIVER=file
@@ -365,6 +408,8 @@ Work through this checklist in your browser:
 | Uploaded image via section editor | Edit a page section, pick/upload an image |
 | Section content fields editable | Admin → Content → Pages → edit a page → Sections tab → open a section (e.g. Hero, Services, Reviews) and confirm text/image fields show and save |
 | reCAPTCHA active (check Network tab) | A call to `google.com/recaptcha` should appear |
+| Blog loads | `https://yourdomain.com/blog` |
+| Blog preview section shows real posts | Any page with a `blog-preview` section (see Step 2.5) |
 
 ---
 
@@ -426,6 +471,11 @@ php artisan view:clear
 - Ensure your production domain is added in the [reCAPTCHA admin console](https://www.google.com/recaptcha/admin)
 - `localhost` and `127.0.0.1` are separate entries from your live domain
 - Check `RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY` are set in `.env`
+
+### Blog preview section shows no posts
+- Confirm WordPress's table prefix is `fly_` — `BlogService.php` hardcodes `fly_posts`/`fly_postmeta`/etc. and silently returns an empty list on any DB error (including "table not found"), so there's no visible error
+- Confirm `BLOG_DB_*` in `.env` point at the WordPress database (not the Laravel one) and re-run `php artisan config:cache`
+- Confirm the WP posts are actually `post_status = 'publish'` and `post_type = 'post'`
 
 ### Email not sending (2FA codes, notifications)
 - Test with `php artisan tinker` → `Mail::raw('test', fn($m) => $m->to('you@email.com')->subject('test'))`

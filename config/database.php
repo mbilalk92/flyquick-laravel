@@ -72,7 +72,7 @@ return [
             'password'  => env('BLOG_DB_PASSWORD', ''),
             'charset'   => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix'    => '',
+            'prefix'    => env('BLOG_DB_PREFIX', 'fly_'),
         ],
 
         'pgsql' => [

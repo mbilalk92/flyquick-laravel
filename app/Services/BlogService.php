@@ -25,18 +25,20 @@ class BlogService
                 [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
             );
 
+            $prefix = config('database.connections.blog.prefix', 'fly_');
+
             $stmt = $pdo->prepare("
                 SELECT p.ID, p.post_title, p.post_name, p.post_date, p.post_content,
                     ( SELECT GROUP_CONCAT(t.name ORDER BY t.term_id LIMIT 1)
-                      FROM fly_terms t
-                      JOIN fly_term_taxonomy tt ON t.term_id = tt.term_id
-                      JOIN fly_term_relationships tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
+                      FROM {$prefix}terms t
+                      JOIN {$prefix}term_taxonomy tt ON t.term_id = tt.term_id
+                      JOIN {$prefix}term_relationships tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
                       WHERE tr.object_id = p.ID AND tt.taxonomy = 'category'
                     ) AS category,
-                    ( SELECT pm.meta_value FROM fly_postmeta pm
+                    ( SELECT pm.meta_value FROM {$prefix}postmeta pm
                       WHERE pm.post_id = p.ID AND pm.meta_key = '_thumbnail_id' LIMIT 1
                     ) AS thumb_id
-                FROM fly_posts p
+                FROM {$prefix}posts p
                 WHERE p.post_status = 'publish' AND p.post_type = 'post'
                 ORDER BY p.post_date DESC
                 LIMIT :lim
@@ -54,8 +56,8 @@ class BlogService
                     $in     = implode(',', array_map('intval', $thumbIds));
                     $thumbs = $pdo->query("
                         SELECT p.ID, pm.meta_value AS file
-                        FROM fly_posts p
-                        JOIN fly_postmeta pm ON pm.post_id = p.ID AND pm.meta_key = '_wp_attached_file'
+                        FROM {$prefix}posts p
+                        JOIN {$prefix}postmeta pm ON pm.post_id = p.ID AND pm.meta_key = '_wp_attached_file'
                         WHERE p.ID IN ($in)
                     ")->fetchAll(PDO::FETCH_KEY_PAIR);
                 }
