@@ -200,7 +200,21 @@ RECAPTCHA_SKIP_IP=
 
 # ── Filesystem ────────────────────────────────────────
 FILESYSTEM_DISK=public
+
+# ── Site-wide contact details (config/site.php) ───────
+# Shown across the hero, trust row, footer and contact section —
+# these have hard-coded fallbacks in config/site.php but should
+# always be overridden here for a real deployment.
+SITE_URL=https://yourdomain.com
+SITE_PHONE="+61 3 9017 1800"
+SITE_PHONE_HREF=tel:+61390171800
+SITE_EMAIL=support@yourdomain.com
+SITE_WHATSAPP="https://wa.me/61390171800"
+SITE_HOURS="Mon–Sat 9am–11pm · Sun 11am–7pm, Melbourne time"
+BLOG_URL=https://yourdomain.com/blog
 ```
+
+> **Note:** these `SITE_*` values are separate from the **Site Settings** page in the admin panel (`/admin` → Configuration → Site Settings) — that page only controls `site_name`, `site_logo`, social links, etc. (stored in the `settings` table). The `SITE_*` env vars above are what the public page templates actually read for phone/email/WhatsApp/hours, so update `.env` (and re-run `php artisan config:cache`) if those details change.
 
 Save and exit: `Ctrl+O` → `Enter` → `Ctrl+X`
 
@@ -228,7 +242,7 @@ php artisan migrate --force
 
 # Seed all pages and initial data
 php artisan db:seed --class=PagesSeeder --force
-php artisan db:seed --class=RolesAndPermissionsSeeder --force
+php artisan db:seed --class=RolesAndAdminSeeder --force
 ```
 
 > **Important:** `--force` is required in production to bypass the confirmation prompt.
@@ -241,6 +255,15 @@ php artisan storage:link
 
 This creates `public/storage` → `storage/app/public` so uploaded media is publicly accessible.
 
+> **Hostinger note:** shared hosting plans disable PHP's `symlink()` function (along with `shell_exec`, `exec`, `proc_open`, etc.) for security, and this is **not** something support will re-enable on a shared plan — only on VPS/Cloud. If `storage:link` fails with `Call to undefined function Illuminate\Filesystem\symlink()`, skip it and instead copy the files manually via File Manager or SFTP:
+>
+> ```bash
+> mkdir -p public/storage
+> cp -r storage/app/public/* public/storage/
+> ```
+>
+> Repeat this copy step after every deploy that adds new files under `storage/app/public` (e.g. new media uploads bundled with a release), since there's no live symlink keeping them in sync.
+
 ### 6.4 Set correct file permissions
 
 ```bash
@@ -248,11 +271,15 @@ chmod -R 755 storage bootstrap/cache
 chmod -R 644 storage/logs
 ```
 
+> **Hostinger note:** if `chmod` fails with `Permission denied` on an existing file (e.g. `storage/logs/laravel.log`), it's usually because that file was created earlier by the PHP-FPM process user, which can differ from your SSH user even under the same account. You can't `chown`/`chmod` a file you don't own without root. Delete the file via hPanel File Manager (which runs with full account privileges) and let Laravel recreate it on the next request, rather than trying to chmod it over SSH.
+
 ### 6.5 Create the admin user
 
 ```bash
 php artisan tinker
 ```
+
+> **Hostinger note:** tinker may print `Error: Call to undefined function shell_exec()` on startup — this is Psy Shell trying to use a disabled convenience function (paging/readline) and is harmless; tinker still works normally for running the code below.
 
 Inside tinker:
 
@@ -336,6 +363,7 @@ Work through this checklist in your browser:
 | Contact form submits | Fill and submit the contact form |
 | Enquiry appears in admin | Admin → Enquiries → Contact Enquiries |
 | Uploaded image via section editor | Edit a page section, pick/upload an image |
+| Section content fields editable | Admin → Content → Pages → edit a page → Sections tab → open a section (e.g. Hero, Services, Reviews) and confirm text/image fields show and save |
 | reCAPTCHA active (check Network tab) | A call to `google.com/recaptcha` should appear |
 
 ---
@@ -352,11 +380,14 @@ git pull origin main
 composer install --no-dev --optimize-autoloader
 
 php artisan migrate --force
+php artisan view:clear
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan filament:cache-components
 ```
+
+> **Note:** `php artisan view:clear` before re-caching matters whenever a deploy changes Blade templates (e.g. `resources/views/sections/*.blade.php`) or Filament admin forms — stale compiled views can otherwise linger even after `view:cache` runs again. `migrate --force` is a no-op if a deploy only touches templates/admin forms and adds no new migration file — not every update ships a schema change.
 
 ---
 

@@ -1,4 +1,4 @@
-@php $items = $data['items'] ?? [
+@php $items = $data['faq_items'] ?? [
     ['q'=>'Can Fly Quick help with complex itineraries?','a'=>'Yes. Our team can help compare routes, fare conditions, baggage and practical details.'],
     ['q'=>'Can I enquire about Umrah travel?','a'=>'Yes. Ask about current private and group options and written inclusions.'],
     ['q'=>'What payment options are available?','a'=>'Available methods depend on the booking and provider conditions.'],

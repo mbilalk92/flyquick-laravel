@@ -1,0 +1,28 @@
+/* Fix for awcodes/filament-curator v3.7's media picker grid: the package's
+   compiled curator.css scopes .curator-picker-grid behind an ancestor
+   selector ([wire\:key*=open_curator_picker] > .fi-modal-window) that never
+   matches the markup rendered by filament/filament ^3.3 (wire:key and the
+   fi-modal-window class land on the same element, not parent/child), so the
+   grid rule never applies and every item renders full width. Re-apply the
+   same layout directly on the class instead. */
+.curator-picker-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .curator-picker-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (min-width: 768px) {
+    .curator-picker-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1280px) {
+    .curator-picker-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1536px) {
+    .curator-picker-grid { grid-template-columns: repeat(10, minmax(0, 1fr)); }
+}

@@ -1,3 +1,8 @@
+@php
+    $eyebrow = $data['eyebrow'] ?? 'Popular destinations';
+    $heading = $data['heading'] ?? 'Journeys worth looking forward to.';
+    $intro   = $data['intro'] ?? 'Browse popular destinations or speak with our team for personalised advice on routes, fares and travel conditions.';
+@endphp
 @php $destinations = $data['destinations'] ?? [
     ['name'=>'Pakistan','desc'=>'Flights and family travel','image'=>'/assets/images/destinations/pakistan.webp','link'=>'/location/pakistan/'],
     ['name'=>'Bali','desc'=>'Beach stays and island escapes','image'=>'/assets/images/destinations/bali.webp','link'=>'/holiday-packages/'],
@@ -12,10 +17,10 @@
     <div class="site-shell">
         <div class="split-heading">
             <div>
-                <p class="eyebrow">Popular destinations</p>
-                <h2>Journeys worth looking forward to.</h2>
+                <p class="eyebrow">{{ $eyebrow }}</p>
+                <h2>{{ $heading }}</h2>
             </div>
-            <p>Browse popular destinations or speak with our team for personalised advice on routes, fares and travel conditions.</p>
+            <p>{{ $intro }}</p>
         </div>
         <div class="destination-list-grid">
             @foreach($destinations as $d)

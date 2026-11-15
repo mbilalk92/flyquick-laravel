@@ -14,7 +14,7 @@
         <div class="feature-grid">
             @foreach($features as $f)
             <article class="feature-card">
-                <span>{{ $f['icon'] ?? '✓' }}</span>
+                <span><i class="{{ $f['icon'] ?? 'fa-solid fa-circle-check' }}" aria-hidden="true"></i></span>
                 <h3>{{ $f['title'] }}</h3>
                 <p>{{ $f['body'] }}</p>
             </article>

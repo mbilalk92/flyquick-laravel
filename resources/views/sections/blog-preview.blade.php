@@ -1,14 +1,17 @@
 @php
-    $posts = app(\App\Services\BlogService::class)->latestPosts(6);
+    $posts     = app(\App\Services\BlogService::class)->latestPosts(6);
+    $eyebrow   = $data['eyebrow'] ?? 'Travel guides';
+    $heading   = $data['heading'] ?? 'Useful ideas before you book.';
+    $linkLabel = $data['link_label'] ?? 'View all travel guides →';
 @endphp
 <section class="section blog-preview-section">
     <div class="site-shell">
         <div class="section-heading destination-heading blog-heading">
             <div>
-                <p class="eyebrow">Travel guides</p>
-                <h2>Useful ideas before you book.</h2>
+                <p class="eyebrow">{{ $eyebrow }}</p>
+                <h2>{{ $heading }}</h2>
             </div>
-            <a class="quiet-link dark" href="{{ config('site.blog_url') }}">View all travel guides →</a>
+            <a class="quiet-link dark" href="{{ config('site.blog_url') }}">{{ $linkLabel }}</a>
         </div>
         <div class="blog-card-grid">
             @forelse($posts as $post)

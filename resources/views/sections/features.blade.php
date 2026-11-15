@@ -1,4 +1,4 @@
-@php $items = $data['items'] ?? []; @endphp
+@php $items = $data['feature_items'] ?? []; @endphp
 <section class="section intro-section">
     <div class="site-shell">
         <div class="section-heading split-heading">
@@ -11,7 +11,7 @@
         <div class="feature-grid">
             @foreach($items as $item)
             <article class="feature-card">
-                <span>{{ $item['icon'] ?? '✓' }}</span>
+                <span><i class="{{ $item['icon'] ?? 'fa-solid fa-circle-check' }}" aria-hidden="true"></i></span>
                 <h3>{{ $item['title'] }}</h3>
                 <p>{{ $item['body'] }}</p>
             </article>

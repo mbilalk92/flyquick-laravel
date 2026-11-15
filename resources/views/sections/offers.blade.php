@@ -1,4 +1,4 @@
-@php $cards = $data['cards'] ?? [
+@php $cards = $data['offer_cards'] ?? [
     ['category'=>'Family and community travel','title'=>'Current flight ideas for Pakistan','body'=>'Ask our team to compare current routes, baggage conditions and family travel options.','image'=>'/assets/images/destinations/pakistan.webp','link'=>'/flights/','label'=>'Ask for current options →'],
     ['category'=>'Flights and stays','title'=>'Build a Bali escape around your dates','body'=>'Combine current flight and accommodation choices in a tailored holiday itinerary.','image'=>'/assets/images/destinations/bali.webp','link'=>'/holiday-packages/','label'=>'Plan a Bali holiday →'],
     ['category'=>'Religious travel','title'=>'Discuss private and group Umrah','body'=>'Enquire about current journey structures, accommodation preferences and inclusions.','image'=>'/assets/images/destinations/umrah.webp','link'=>'/umrah/','label'=>'Explore Umrah →'],

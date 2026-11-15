@@ -69,7 +69,7 @@ class PageResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('slug')->searchable(),
-                Tables\Columns\TextColumn::make('pageSections_count')
+                Tables\Columns\TextColumn::make('page_sections_count')
                     ->counts('pageSections')
                     ->label('Sections'),
                 Tables\Columns\TextColumn::make('template')->badge(),

@@ -1,3 +1,8 @@
+@php
+    $eyebrow = $data['eyebrow'] ?? 'Choose the journey that suits you';
+    $heading = $data['heading'] ?? 'Private, group and heritage travel.';
+    $intro   = $data['intro'] ?? 'Package dates, inclusions and pricing change. Every journey is confirmed against current availability and supplier conditions before booking.';
+@endphp
 @php $journeys = $data['journeys'] ?? [
     ['name'=>'Private Umrah','desc'=>'A flexible journey arranged around your dates, preferred room type and travel needs.','href'=>'/religious-tours/private-umrah/','image'=>'/assets/images/religious/private-umrah.webp'],
     ['name'=>'Group Umrah','desc'=>'Travel with a coordinated group itinerary and support across flights, stays and transfers.','href'=>'/religious-tours/group-umrah/','image'=>'/assets/images/religious/group-umrah.webp'],
@@ -10,10 +15,10 @@
     <div class="site-shell">
         <div class="section-heading split-heading">
             <div>
-                <p class="eyebrow">Choose the journey that suits you</p>
-                <h2>Private, group and heritage travel.</h2>
+                <p class="eyebrow">{{ $eyebrow }}</p>
+                <h2>{{ $heading }}</h2>
             </div>
-            <p>Package dates, inclusions and pricing change. Every journey is confirmed against current availability and supplier conditions before booking.</p>
+            <p>{{ $intro }}</p>
         </div>
         <div class="journey-grid">
             @foreach($journeys as $j)
