@@ -48,19 +48,27 @@ class AppServiceProvider extends ServiceProvider
                     document.addEventListener('DOMContentLoaded', function () {
                         var form = document.querySelector('form');
                         if (!form) return;
+                        var btn = form.querySelector('[type=submit]');
+
                         form.addEventListener('submit', function (e) {
                             e.preventDefault();
-                            var btn = form.querySelector('[type=submit]');
+
+                            var wireEl = form.closest('[wire\\\\:id]');
+                            if (!wireEl || !window.Livewire) return;
+                            var component = window.Livewire.find(wireEl.getAttribute('wire:id'));
+
                             if (btn) btn.disabled = true;
                             grecaptcha.ready(function () {
                                 grecaptcha.execute('{$siteKey}', {action: 'login'}).then(function (token) {
-                                    var input = document.createElement('input');
-                                    input.type = 'hidden';
-                                    input.name = 'g-recaptcha-response-v3';
-                                    input.value = token;
-                                    form.appendChild(input);
-                                    if (btn) btn.disabled = false;
-                                    form.submit();
+                                    // Stash the token on the Livewire component itself — Livewire's
+                                    // AJAX submit only sends wire:model-bound state, never raw DOM
+                                    // inputs, so a plain hidden field + form.submit() would bypass
+                                    // Livewire and hit a route that only accepts GET (405).
+                                    component.set('recaptchaToken', token).then(function () {
+                                        component.call('authenticate').finally(function () {
+                                            if (btn) btn.disabled = false;
+                                        });
+                                    });
                                 });
                             });
                         });

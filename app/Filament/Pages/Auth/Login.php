@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Http;
 
 class Login extends BaseLogin
 {
+    public ?string $recaptchaToken = null;
+
     public function authenticate(): ?LoginResponse
     {
         $this->validateRecaptcha();
@@ -45,7 +47,7 @@ class Login extends BaseLogin
             return;
         }
 
-        $token = request()->input('g-recaptcha-response-v3');
+        $token = $this->recaptchaToken;
 
         if (empty($token)) {
             throw ValidationException::withMessages([
