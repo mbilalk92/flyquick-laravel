@@ -679,7 +679,7 @@ class PageSectionsRelationManager extends RelationManager
                                     ->columnSpanFull(),
                             ])
                             ->columns(2)
-                            ->defaultItems(3)
+                            ->defaultItems(2)
                             ->reorderable()
                             ->columnSpanFull(),
                         Forms\Components\TextInput::make('data.accepted_label')->label('"Also accepted" label'),

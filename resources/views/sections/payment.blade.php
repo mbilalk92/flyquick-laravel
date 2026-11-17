@@ -7,12 +7,11 @@
     $linkHref    = $data['link_href'] ?? '/payment-options/';
     $panelLabel  = $data['panel_label'] ?? 'Available interest-free options may include';
     $logos       = $data['logos'] ?? [
-        ['label' => 'PayPal Pay in 4'],
+        ['label' => 'humm90'],
         ['label' => 'Zip'],
-        ['label' => 'humm'],
     ];
     $acceptedLabel = $data['accepted_label'] ?? 'Also accepted';
-    $acceptedText  = $data['accepted_text'] ?? 'Bank transfer · Credit and debit cards';
+    $acceptedText  = $data['accepted_text'] ?? 'Credit card · Bank transfer';
 @endphp
 <section class="payment-section">
     <div class="site-shell payment-layout">
