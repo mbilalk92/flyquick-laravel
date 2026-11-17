@@ -31,12 +31,13 @@ class EnquiryController extends Controller
         }
 
         $data = $request->validate([
-            'name'        => 'required|string|min:2|max:255',
-            'email'       => 'required|email|max:255',
-            'phone'       => 'required|string|min:8|max:50',
-            'travel_type' => 'nullable|string|max:100',
-            'message'     => 'required|string|min:10',
-            'consent'     => 'required|accepted',
+            'name'         => 'required|string|min:2|max:255',
+            'email'        => 'required|email|max:255',
+            'phone'        => 'required|string|min:8|max:50',
+            'travel_type'  => 'nullable|string|max:100',
+            'company_name' => 'nullable|string|max:255',
+            'message'      => 'required|string|min:10',
+            'consent'      => 'required|accepted',
         ]);
 
         $data['subject'] = trim(
@@ -46,12 +47,13 @@ class EnquiryController extends Controller
         ) ?: null;
 
         ContactEnquiry::create([
-            'name'        => $data['name'],
-            'email'       => $data['email'],
-            'phone'       => $data['phone'],
-            'travel_type' => $data['travel_type'] ?? null,
-            'subject'     => $data['subject'],
-            'message'     => $data['message'],
+            'name'         => $data['name'],
+            'email'        => $data['email'],
+            'phone'        => $data['phone'],
+            'travel_type'  => $data['travel_type'] ?? null,
+            'company_name' => $data['company_name'] ?? null,
+            'subject'      => $data['subject'],
+            'message'      => $data['message'],
         ]);
 
         return redirect()->back()->with('enquiry_sent', true);

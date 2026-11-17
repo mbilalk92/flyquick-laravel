@@ -1,3 +1,25 @@
+@php
+    $typeSlugMap = [
+        'hotel'     => 'Hotels',
+        'holiday'   => 'Holiday package',
+        'corporate' => 'Corporate travel',
+        'umrah'     => 'Umrah or religious travel',
+        'flight'    => 'Flights',
+    ];
+
+    $selectedTravelType = old('travel_type')
+        ?? ($defaultTravelType ?? null)
+        ?? ($typeSlugMap[request()->query('type')] ?? null);
+
+    $travelTypeOptions = [
+        'General travel enquiry',
+        'Flights',
+        'Hotels',
+        'Holiday package',
+        'Umrah or religious travel',
+        'Corporate travel',
+    ];
+@endphp
 <form class="contact-form" action="/send-enquiry" method="post" id="contact-enquiry-form">
     @csrf
     <div class="form-grid">
@@ -6,18 +28,16 @@
         <label><span>Phone or WhatsApp *</span><input name="phone" type="tel" autocomplete="tel" minlength="8" required></label>
         <label><span>How can we help? *</span>
             <select name="travel_type" required>
-                <option>General travel enquiry</option>
-                <option>Flights</option>
-                <option>Hotels</option>
-                <option>Holiday package</option>
-                <option>Umrah or religious travel</option>
-                <option>Corporate travel</option>
+                @foreach($travelTypeOptions as $option)
+                <option @selected($selectedTravelType === $option)>{{ $option }}</option>
+                @endforeach
             </select>
         </label>
         <label><span>Leaving from</span><input name="origin"></label>
         <label><span>Destination</span><input name="destination"></label>
         <label><span>Preferred dates</span><input name="dates"></label>
         <label><span>Travellers</span><input name="travellers"></label>
+        <label><span>Company name</span><input name="company_name" autocomplete="organization" value="{{ old('company_name') }}"></label>
         <label class="form-span"><span>Tell us about your plans *</span><textarea name="message" rows="6" minlength="10" required></textarea></label>
         <label class="honeypot" aria-hidden="true"><span>Company</span><input name="company" tabindex="-1" autocomplete="off"></label>
         <label class="form-consent form-span">

@@ -1,5 +1,9 @@
-@php $heading = $data['heading'] ?? 'Reach Fly Quick'; @endphp
-<section class="section alt">
+@php
+    $heading = $data['heading'] ?? 'Reach Fly Quick';
+    $defaultTravelType = $data['default_travel_type'] ?? null;
+    $anchorId = $data['anchor_id'] ?? null;
+@endphp
+<section class="section alt" @if($anchorId) id="{{ $anchorId }}" @endif>
     <div class="shell two-col">
         <aside>
             <h2>{{ $heading }}</h2>

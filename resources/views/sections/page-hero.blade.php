@@ -4,6 +4,8 @@
     $heading   = $data['heading']   ?? '';
     $lead      = $data['lead']      ?? '';
     $showCta   = $data['show_cta']  ?? true;
+    $ctaLabel  = $data['cta_label'] ?? 'Start your search →';
+    $ctaHref   = $data['cta_href']  ?? '/#search';
 @endphp
 <section class="page-hero {{ $heroImage ? 'page-hero-image' : 'page-hero-simple' }}">
     @if($heroImage)
@@ -16,7 +18,7 @@
         @if($lead)<p class="page-hero-lead">{{ $lead }}</p>@endif
         @if($showCta)
         <div class="hero-actions">
-            <a class="button button-bright" href="/#search">Start your search →</a>
+            <a class="button button-bright" href="{{ $ctaHref }}">{{ $ctaLabel }}</a>
             <a class="button button-ghost" href="{{ config('site.whatsapp') }}" target="_blank" rel="noopener">Ask our team</a>
         </div>
         <div class="hero-proof">

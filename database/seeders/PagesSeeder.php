@@ -29,7 +29,12 @@ class PagesSeeder extends Seeder
                 ['◇', 'Family and group options', 'Ask about room configurations and group arrangements that suit your travellers.'],
                 ['✓', 'Flexible choices', 'We can help identify refundable and changeable options where available.'],
                 ['◷', 'Part of a complete trip', 'Combine your stay with flights and other travel arrangements.'],
-            ]
+            ],
+            ctaLabel: 'Request a hotel quote',
+            ctaHref: '#enquiry',
+            includeFlightSearch: false,
+            enquiryDefaultType: 'Hotels',
+            enquiryHeading: 'Request a hotel quote',
         );
         $this->seedServicePage('holiday-packages', 'Holiday Packages | Fly Quick', 'A holiday planned around you.', 'Tailored holiday packages',
             'Bring flights, stays and the details that matter together in a clear itinerary for couples, families and groups.',
@@ -39,7 +44,12 @@ class PagesSeeder extends Seeder
                 ['◇', 'Destination advice', 'Discuss timing, stopovers and destination combinations with our team.'],
                 ['✓', 'Family and group travel', 'Plan rooming, passenger needs and practical travel details together.'],
                 ['◷', 'Flexible ways to pay', 'Ask about regular and eligible interest-free payment facilities.'],
-            ]
+            ],
+            ctaLabel: 'Request a holiday quote',
+            ctaHref: '#enquiry',
+            includeFlightSearch: false,
+            enquiryDefaultType: 'Holiday package',
+            enquiryHeading: 'Request a holiday quote',
         );
         $this->seedServicePage('umrah', 'Umrah Travel | Fly Quick', 'Your Umrah journey, handled with care.', 'Private and group Umrah',
             'Discuss flights, accommodation, transfers and itinerary options with a team that understands the importance of every part of your journey.',
@@ -94,8 +104,21 @@ class PagesSeeder extends Seeder
         }
     }
 
-    private function seedServicePage(string $slug, string $metaTitle, string $heading, string $eyebrow, string $lead, string $heroImage, string $heroAlt, array $features): void
-    {
+    private function seedServicePage(
+        string $slug,
+        string $metaTitle,
+        string $heading,
+        string $eyebrow,
+        string $lead,
+        string $heroImage,
+        string $heroAlt,
+        array $features,
+        ?string $ctaLabel = null,
+        ?string $ctaHref = null,
+        bool $includeFlightSearch = true,
+        ?string $enquiryDefaultType = null,
+        ?string $enquiryHeading = null,
+    ): void {
         $title = $heading;
         $page  = Page::firstOrCreate(['slug' => $slug], [
             'title'            => $title,
@@ -108,13 +131,20 @@ class PagesSeeder extends Seeder
         $page->pageSections()->delete();
         $featureItems = array_map(fn($f) => ['icon' => $f[0], 'title' => $f[1], 'body' => $f[2]], $features);
 
+        $heroData = ['heading' => $heading, 'eyebrow' => $eyebrow, 'lead' => $lead, 'image_url' => $heroImage, 'image_alt' => $heroAlt, 'show_cta' => true];
+        if ($ctaLabel) { $heroData['cta_label'] = $ctaLabel; }
+        if ($ctaHref)  { $heroData['cta_href']  = $ctaHref; }
+
         $sections = [
-            ['page-hero', ['heading' => $heading, 'eyebrow' => $eyebrow, 'lead' => $lead, 'image_url' => $heroImage, 'image_alt' => $heroAlt, 'show_cta' => true]],
+            ['page-hero', $heroData],
             ['breadcrumbs', ['crumbs' => [['label' => $title, 'url' => null]]]],
             ['features', ['heading' => 'Plan online. Get human help when needed.', 'items' => $featureItems]],
-            ['inner-search', []],
-            ['process', []],
         ];
+        $sections[] = $includeFlightSearch
+            ? ['inner-search', []]
+            : ['contact', ['heading' => $enquiryHeading ?? 'Get in touch', 'default_travel_type' => $enquiryDefaultType, 'anchor_id' => 'enquiry']];
+        $sections[] = ['process', []];
+
         foreach ($sections as $i => [$type, $data]) {
             PageSection::create(['page_id' => $page->id, 'section_type' => $type, 'data' => $data ?: null, 'sort_order' => $i, 'is_active' => true]);
         }
@@ -447,7 +477,7 @@ class PagesSeeder extends Seeder
         ]);
         $page->pageSections()->delete();
         foreach ([
-            ['page-hero', ['heading' => 'Business travel, handled with care.', 'eyebrow' => 'Corporate travel Australia', 'lead' => 'Flights, accommodation and travel management for Australian businesses, with personal support from our team.', 'image_url' => '/assets/images/hero-flight.webp', 'image_alt' => 'Aircraft in flight', 'show_cta' => true]],
+            ['page-hero', ['heading' => 'Business travel, handled with care.', 'eyebrow' => 'Corporate travel Australia', 'lead' => 'Flights, accommodation and travel management for Australian businesses, with personal support from our team.', 'image_url' => '/assets/images/hero-flight.webp', 'image_alt' => 'Aircraft in flight', 'show_cta' => true, 'cta_label' => 'Request a corporate quote', 'cta_href' => '#enquiry']],
             ['breadcrumbs', ['crumbs' => [['label' => 'Corporate Travel', 'url' => null]]]],
             ['features', ['heading' => 'Supporting Australian business travellers', 'items' => [
                 ['icon' => '✈', 'title' => 'Business class and premium options', 'body' => 'Ask about current fares and availability in business and premium economy cabins.'],
@@ -456,6 +486,7 @@ class PagesSeeder extends Seeder
                 ['icon' => '◇', 'title' => 'After-hours support', 'body' => 'Reach our team across extended hours for time-sensitive changes.'],
             ]]],
             ['process', []],
+            ['contact', ['heading' => 'Request a corporate travel quote', 'default_travel_type' => 'Corporate travel', 'anchor_id' => 'enquiry']],
         ] as $i => [$type, $data]) {
             PageSection::create(['page_id' => $page->id, 'section_type' => $type, 'data' => $data ?: null, 'sort_order' => $i, 'is_active' => true]);
         }

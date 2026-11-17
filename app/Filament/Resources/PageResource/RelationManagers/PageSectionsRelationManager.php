@@ -108,7 +108,7 @@ class PageSectionsRelationManager extends RelationManager
         }
 
         $allowedKeysByType = [
-            'page-hero' => ['heading', 'eyebrow', 'lead', 'image_media_id', 'image_url', 'image_alt', 'show_cta'],
+            'page-hero' => ['heading', 'eyebrow', 'lead', 'image_media_id', 'image_url', 'image_alt', 'show_cta', 'cta_label', 'cta_href'],
             'breadcrumbs' => ['crumbs'],
             'features' => ['heading', 'feature_items'],
             'faq' => ['heading', 'faq_items'],
@@ -128,7 +128,7 @@ class PageSectionsRelationManager extends RelationManager
             'about-story' => ['eyebrow', 'heading', 'paragraph1', 'paragraph2', 'story_cards'],
             'blog-preview' => ['eyebrow', 'heading', 'link_label'],
             'support' => ['eyebrow', 'heading', 'intro', 'stat_number', 'stat_label', 'note1', 'note2', 'note3', 'checklist'],
-            'contact' => ['heading'],
+            'contact' => ['heading', 'default_travel_type', 'anchor_id'],
         ];
 
         $unwrap = function ($value) use (&$unwrap) {
@@ -294,6 +294,10 @@ class PageSectionsRelationManager extends RelationManager
                             ->label('Show "Get in touch" button')
                             ->default(false)
                             ->inline(false),
+                        Forms\Components\TextInput::make('data.cta_label')
+                            ->label('Button label (defaults to "Start your search →")'),
+                        Forms\Components\TextInput::make('data.cta_href')
+                            ->label('Button URL (defaults to the home search, /#search)'),
                     ]))
                     ->columns(2)
                     ->columnSpanFull()
@@ -786,9 +790,20 @@ class PageSectionsRelationManager extends RelationManager
                 Forms\Components\Section::make('Contact section content')
                     ->schema(static::dehydrateWhen('contact', [
                         Forms\Components\TextInput::make('data.heading')->label('Heading')->columnSpanFull(),
+                        Forms\Components\Select::make('data.default_travel_type')
+                            ->label('Pre-select "How can we help?" to')
+                            ->options([
+                                'Hotels'                     => 'Hotels',
+                                'Holiday package'            => 'Holiday package',
+                                'Corporate travel'           => 'Corporate travel',
+                                'Umrah or religious travel'  => 'Umrah or religious travel',
+                                'Flights'                    => 'Flights',
+                            ])
+                            ->placeholder('No pre-selection (default)')
+                            ->columnSpanFull(),
                         Forms\Components\Placeholder::make('_contact_hint')
                             ->label('')
-                            ->content('Phone, email, WhatsApp and hours come from the site-wide SITE_* config/env values, not this form. The form fields below it are not editable here.')
+                            ->content('Phone, email, WhatsApp and hours come from the site-wide SITE_* config/env values, not this form. The remaining form fields are not editable here.')
                             ->columnSpanFull(),
                     ]))
                     ->columnSpanFull()

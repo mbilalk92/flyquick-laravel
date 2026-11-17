@@ -4,11 +4,11 @@
     $body        = $data['body'] ?? 'Pay using regular methods or explore eligible interest-free payment options when booking with Fly Quick.';
     $disclaimer  = $data['disclaimer'] ?? 'Eligibility, approval, limits, fees and provider terms and conditions apply.';
     $linkLabel   = $data['link_label'] ?? 'Compare payment options →';
-    $linkHref    = $data['link_href'] ?? '/payment-options/';
+    $linkHref    = $data['link_href'] ?? '/contact/';
     $panelLabel  = $data['panel_label'] ?? 'Available interest-free options may include';
     $logos       = $data['logos'] ?? [
-        ['label' => 'humm90'],
-        ['label' => 'Zip'],
+        ['label' => 'Humm90', 'image' => '/assets/images/humm90-logo.png'],
+        ['label' => 'Zip', 'image' => '/assets/images/zip-logo.png'],
     ];
     $acceptedLabel = $data['accepted_label'] ?? 'Also accepted';
     $acceptedText  = $data['accepted_text'] ?? 'Credit card · Bank transfer';
