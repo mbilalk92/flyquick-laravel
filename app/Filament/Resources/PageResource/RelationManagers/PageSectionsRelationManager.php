@@ -563,6 +563,7 @@ class PageSectionsRelationManager extends RelationManager
                                 Forms\Components\TextInput::make('tag')->label('Tag (e.g. Reconnect)'),
                                 Forms\Components\TextInput::make('title')->label('Title'),
                                 Forms\Components\TextInput::make('caption')->label('Caption')->columnSpan(2),
+                                Forms\Components\TextInput::make('href')->label('Link URL (whole card is clickable)')->columnSpan(2),
                                 CuratorPicker::make('image_media_id')
                                     ->label('Image (pick / upload)')
                                     ->buttonLabel('Pick / upload image')
