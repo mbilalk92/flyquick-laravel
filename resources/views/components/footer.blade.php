@@ -43,7 +43,7 @@
             @forelse($companyItems ?? [] as $item)
                 <a href="{{ $item->url }}" target="{{ $item->target }}">{{ $item->label }}</a>
             @empty
-                <a href="/about/">About us</a>
+                <a href="/about-us/">About us</a>
                 <a href="/corporate-travel-australia/">Corporate travel</a>
                 <a href="/religious-tours/">Religious travel</a>
                 <a href="/payment-options/">Payment options</a>

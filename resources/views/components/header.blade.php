@@ -66,9 +66,9 @@
                 </div>
                 <div class="nav-item"><a href="/payment-options/">Payment options</a></div>
                 <div class="nav-item">
-                    <a href="/about/">More <span class="nav-caret">⌄</span></a>
+                    <a href="/about-us/">More <span class="nav-caret">⌄</span></a>
                     <div class="nav-dropdown">
-                        <a href="/about/">About Fly Quick</a>
+                        <a href="/about-us/">About Fly Quick</a>
                         <a href="/corporate-travel-australia/">Corporate travel</a>
                         <a href="/faqs/">FAQs</a>
                         <a href="/contact/">Contact us</a>

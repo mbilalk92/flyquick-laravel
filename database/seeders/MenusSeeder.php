@@ -31,8 +31,8 @@ class MenusSeeder extends Seeder
                 ['label' => 'Saudi Arabia', 'url' => '/location/saudi-arabia/'],
             ]],
             ['label' => 'Payment options', 'url' => '/payment-options/'],
-            ['label' => 'More', 'url' => '/about/', 'children' => [
-                ['label' => 'About Fly Quick', 'url' => '/about/'],
+            ['label' => 'More', 'url' => '/about-us/', 'children' => [
+                ['label' => 'About Fly Quick', 'url' => '/about-us/'],
                 ['label' => 'Corporate travel', 'url' => '/corporate-travel-australia/'],
                 ['label' => 'FAQs', 'url' => '/faqs/'],
                 ['label' => 'Contact us', 'url' => '/contact/'],
@@ -47,7 +47,7 @@ class MenusSeeder extends Seeder
         ]);
 
         $this->seedMenu('footer_company', 'Footer – Company Links', [
-            ['label' => 'About us', 'url' => '/about/'],
+            ['label' => 'About us', 'url' => '/about-us/'],
             ['label' => 'Corporate travel', 'url' => '/corporate-travel-australia/'],
             ['label' => 'Religious travel', 'url' => '/religious-tours/'],
             ['label' => 'Payment options', 'url' => '/payment-options/'],
