@@ -298,14 +298,14 @@ php artisan storage:link
 
 This creates `public/storage` → `storage/app/public` so uploaded media is publicly accessible.
 
-> **Hostinger note:** shared hosting plans disable PHP's `symlink()` function (along with `shell_exec`, `exec`, `proc_open`, etc.) for security, and this is **not** something support will re-enable on a shared plan — only on VPS/Cloud. If `storage:link` fails with `Call to undefined function Illuminate\Filesystem\symlink()`, skip it and instead copy the files manually via File Manager or SFTP:
+> **Hostinger note:** shared hosting plans disable PHP's `symlink()` function (along with `shell_exec`, `exec`, `proc_open`, etc.) for security, and this is **not** something support will re-enable on a shared plan — only on VPS/Cloud. If `storage:link` fails with `Call to undefined function Illuminate\Filesystem\symlink()`, skip it:
 >
 > ```bash
 > mkdir -p public/storage
 > cp -r storage/app/public/* public/storage/
 > ```
 >
-> Repeat this copy step after every deploy that adds new files under `storage/app/public` (e.g. new media uploads bundled with a release), since there's no live symlink keeping them in sync.
+> **If the app's `public/` folder isn't the real served document root** (e.g. the "flatten public" setup in Step 2.3/2.4, where the actual web root is one level up from the app), `public/storage` above isn't even the path visitors hit — set `PUBLIC_STORAGE_SYNC_PATH` in `.env` to the real, publicly-served storage directory instead (e.g. `~/domains/yourdomain.com/public_html/storage`), and the `storage:sync-public` artisan command — scheduled every minute via Step 9's cron — copies new/changed uploads there automatically. No manual copy step needed after this is set up; just confirm the Step 9 cron job for `schedule:run` is actually configured in hPanel, since that's what fires it.
 
 ### 6.4 Set correct file permissions
 

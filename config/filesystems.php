@@ -73,4 +73,21 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Public Storage Sync Path (for hosts without a working storage:link)
+    |--------------------------------------------------------------------------
+    |
+    | On shared hosting with symlink() disabled, and where the app's public/
+    | folder isn't the actual served document root, there's no live link
+    | keeping storage/app/public in sync with what's publicly served. Set
+    | this to that real, publicly-served "storage" directory and the
+    | storage:sync-public command (scheduled every minute) will copy new or
+    | changed files across automatically. Leave blank where storage:link
+    | already works.
+    |
+    */
+
+    'public_storage_sync_path' => env('PUBLIC_STORAGE_SYNC_PATH'),
+
 ];
