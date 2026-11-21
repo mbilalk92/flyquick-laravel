@@ -4,6 +4,9 @@
     $email     = config('site.email');
     $whatsapp  = config('site.whatsapp');
     $hours     = config('site.hours');
+
+    $planItems = optional(\App\Models\Menu::where('location', 'footer_plan')->first())->items?->where('is_active', true);
+    $companyItems = optional(\App\Models\Menu::where('location', 'footer_company')->first())->items?->where('is_active', true);
 @endphp
 <section class="closing-cta">
     <div class="site-shell closing-cta-inner">
@@ -26,18 +29,26 @@
         </div>
         <div>
             <h3>Plan your trip</h3>
-            <a href="/flights/">Flights</a>
-            <a href="/hotels/">Hotels</a>
-            <a href="/holiday-packages/">Holiday packages</a>
-            <a href="/locations/">Destinations</a>
+            @forelse($planItems ?? [] as $item)
+                <a href="{{ $item->url }}" target="{{ $item->target }}">{{ $item->label }}</a>
+            @empty
+                <a href="/flights/">Flights</a>
+                <a href="/hotels/">Hotels</a>
+                <a href="/holiday-packages/">Holiday packages</a>
+                <a href="/locations/">Destinations</a>
+            @endforelse
         </div>
         <div>
             <h3>Fly Quick</h3>
-            <a href="/about/">About us</a>
-            <a href="/corporate-travel-australia/">Corporate travel</a>
-            <a href="/religious-tours/">Religious travel</a>
-            <a href="/payment-options/">Payment options</a>
-            <a href="/faqs/">FAQs</a>
+            @forelse($companyItems ?? [] as $item)
+                <a href="{{ $item->url }}" target="{{ $item->target }}">{{ $item->label }}</a>
+            @empty
+                <a href="/about/">About us</a>
+                <a href="/corporate-travel-australia/">Corporate travel</a>
+                <a href="/religious-tours/">Religious travel</a>
+                <a href="/payment-options/">Payment options</a>
+                <a href="/faqs/">FAQs</a>
+            @endforelse
         </div>
         <div class="footer-contact">
             <h3>Talk to us</h3>
