@@ -12,6 +12,15 @@ class MenuItem extends Model
 
     protected $casts = ['is_active' => 'boolean'];
 
+    protected static function booted(): void
+    {
+        static::creating(function (MenuItem $item) {
+            if (! $item->menu_id && $item->parent_id) {
+                $item->menu_id = static::find($item->parent_id)?->menu_id;
+            }
+        });
+    }
+
     public function menu(): BelongsTo
     {
         return $this->belongsTo(Menu::class);

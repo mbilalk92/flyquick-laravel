@@ -33,8 +33,9 @@ class MenuResource extends Resource
             ])->columns(2),
 
             Forms\Components\Section::make('Menu Items')
+                ->description('Items without any dropdown items link directly. Add dropdown items to turn a top-level item into a dropdown trigger (its own URL still works as the main link).')
                 ->schema([
-                    Forms\Components\Repeater::make('allItems')
+                    Forms\Components\Repeater::make('items')
                         ->relationship()
                         ->schema([
                             Forms\Components\TextInput::make('label')->required()->columnSpan(2),
@@ -47,6 +48,28 @@ class MenuResource extends Resource
                                 ->numeric()
                                 ->default(0)
                                 ->label('Order'),
+                            Forms\Components\Repeater::make('children')
+                                ->relationship()
+                                ->label('Dropdown items')
+                                ->schema([
+                                    Forms\Components\TextInput::make('label')->required()->columnSpan(2),
+                                    Forms\Components\TextInput::make('url')->required()->columnSpan(2),
+                                    Forms\Components\Select::make('target')
+                                        ->options(['_self' => 'Same tab', '_blank' => 'New tab'])
+                                        ->default('_self'),
+                                    Forms\Components\Toggle::make('is_active')->default(true)->label('Active'),
+                                    Forms\Components\TextInput::make('sort_order')
+                                        ->numeric()
+                                        ->default(0)
+                                        ->label('Order'),
+                                ])
+                                ->columns(3)
+                                ->reorderable('sort_order')
+                                ->orderColumn('sort_order')
+                                ->cloneable()
+                                ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
+                                ->columnSpanFull()
+                                ->collapsed(),
                         ])
                         ->columns(3)
                         ->reorderable('sort_order')

@@ -13,10 +13,30 @@ class MenusSeeder extends Seeder
             ['label' => 'Flights', 'url' => '/flights/'],
             ['label' => 'Hotels', 'url' => '/hotels/'],
             ['label' => 'Holiday packages', 'url' => '/holiday-packages/'],
-            ['label' => 'Umrah', 'url' => '/religious-tours/'],
-            ['label' => 'Destinations', 'url' => '/locations/'],
+            ['label' => 'Umrah', 'url' => '/religious-tours/', 'children' => [
+                ['label' => 'Religious travel overview', 'url' => '/religious-tours/'],
+                ['label' => 'Private Umrah', 'url' => '/religious-tours/private-umrah/'],
+                ['label' => 'Group Umrah', 'url' => '/religious-tours/group-umrah/'],
+                ['label' => 'Private Hajj', 'url' => '/religious-tours/private-hajj/'],
+                ['label' => 'Group Hajj', 'url' => '/religious-tours/group-hajj/'],
+                ['label' => 'Ziarat journeys', 'url' => '/religious-tours/group-ziarat-iran/'],
+            ]],
+            ['label' => 'Destinations', 'url' => '/locations/', 'children' => [
+                ['label' => 'All destinations', 'url' => '/locations/'],
+                ['label' => 'Pakistan', 'url' => '/location/pakistan/'],
+                ['label' => 'India', 'url' => '/location/india/'],
+                ['label' => 'Nepal', 'url' => '/location/nepal/'],
+                ['label' => 'Canada', 'url' => '/location/canada/'],
+                ['label' => 'Australia', 'url' => '/location/australia/'],
+                ['label' => 'Saudi Arabia', 'url' => '/location/saudi-arabia/'],
+            ]],
             ['label' => 'Payment options', 'url' => '/payment-options/'],
-            ['label' => 'More', 'url' => '/about/'],
+            ['label' => 'More', 'url' => '/about/', 'children' => [
+                ['label' => 'About Fly Quick', 'url' => '/about/'],
+                ['label' => 'Corporate travel', 'url' => '/corporate-travel-australia/'],
+                ['label' => 'FAQs', 'url' => '/faqs/'],
+                ['label' => 'Contact us', 'url' => '/contact/'],
+            ]],
         ]);
 
         $this->seedMenu('footer_plan', 'Footer – Plan Your Trip', [
@@ -44,13 +64,24 @@ class MenusSeeder extends Seeder
         }
 
         foreach ($items as $i => $item) {
-            $menu->allItems()->create([
+            $created = $menu->allItems()->create([
                 'label'      => $item['label'],
                 'url'        => $item['url'],
                 'target'     => '_self',
                 'sort_order' => $i,
                 'is_active'  => true,
             ]);
+
+            foreach ($item['children'] ?? [] as $j => $child) {
+                $created->children()->create([
+                    'menu_id'    => $menu->id,
+                    'label'      => $child['label'],
+                    'url'        => $child['url'],
+                    'target'     => '_self',
+                    'sort_order' => $j,
+                    'is_active'  => true,
+                ]);
+            }
         }
     }
 }
