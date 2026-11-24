@@ -8,4 +8,11 @@ return [
     'whatsapp'   => env('SITE_WHATSAPP',   'https://wa.me/61390171800?text=Hi%20Fly%20Quick%2C%20I%27d%20like%20help%20planning%20a%20trip.'),
     'hours'      => env('SITE_HOURS',      'Mon–Sat 9am–11pm · Sun 11am–7pm, Melbourne time'),
     'blog_url'   => env('BLOG_URL',        'http://flyquick-static.test/blog'),
+
+    // Raw script snippets, editable from Admin → Site Settings → Custom Scripts
+    // (SEO verification tags, extra tracking pixels, etc). Overridden at runtime
+    // from the settings table — see AppServiceProvider::boot(). Blank by default.
+    'header_scripts' => env('SITE_HEADER_SCRIPTS', ''),
+    'body_scripts'   => env('SITE_BODY_SCRIPTS', ''),
+    'footer_scripts' => env('SITE_FOOTER_SCRIPTS', ''),
 ];

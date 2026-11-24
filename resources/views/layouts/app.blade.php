@@ -81,8 +81,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="/assets/css/style.css?v={{ file_exists(public_path('assets/css/style.css')) ? filemtime(public_path('assets/css/style.css')) : '1' }}">
     @stack('head')
+    {{-- Admin → Site Settings → Custom Scripts --}}
+    {!! config('site.header_scripts') !!}
 </head>
 <body>
+    {!! config('site.body_scripts') !!}
     @if(config('analytics.gtm_id'))
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('analytics.gtm_id') }}"
         height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -94,5 +97,6 @@
     @include('components.footer')
     @include('components.sabre-scripts')
     @stack('scripts')
+    {!! config('site.footer_scripts') !!}
 </body>
 </html>

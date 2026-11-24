@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->applySiteSettingsOverrides();
+
         // Copyright footer on all simple (auth) pages — login, 2FA challenge etc.
         FilamentView::registerRenderHook(
             PanelsRenderHook::SIMPLE_PAGE_END,
@@ -77,5 +81,37 @@ class AppServiceProvider extends ServiceProvider
                 BLADE);
             }
         );
+    }
+
+    /**
+     * Business contact details and custom script snippets are editable from
+     * Admin → Site Settings. Where a setting has been filled in, it overrides
+     * the env-based default in config/site.php — this runs on every request
+     * (not baked into `config:cache`), so admin edits show up immediately.
+     */
+    private function applySiteSettingsOverrides(): void
+    {
+        if (! Schema::hasTable('settings')) {
+            return;
+        }
+
+        $map = [
+            'site_phone' => 'phone',
+            'site_phone_href' => 'phone_href',
+            'site_email' => 'email',
+            'site_whatsapp' => 'whatsapp',
+            'site_hours' => 'hours',
+            'header_scripts' => 'header_scripts',
+            'body_scripts' => 'body_scripts',
+            'footer_scripts' => 'footer_scripts',
+        ];
+
+        $values = Setting::whereIn('key', array_keys($map))->pluck('value', 'key');
+
+        foreach ($map as $settingKey => $configKey) {
+            if (filled($values[$settingKey] ?? null)) {
+                config(["site.{$configKey}" => $values[$settingKey]]);
+            }
+        }
     }
 }
