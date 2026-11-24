@@ -24,6 +24,7 @@ class Settings extends Page
             'site_phone', 'site_phone_href', 'site_email', 'site_whatsapp', 'site_hours',
             'footer_copyright',
             'social_facebook', 'social_instagram', 'social_twitter',
+            'social_linkedin', 'social_youtube', 'social_tiktok',
             'meta_title_suffix', 'google_analytics_id',
             'header_scripts', 'body_scripts', 'footer_scripts',
         ];
@@ -69,10 +70,14 @@ class Settings extends Page
                     ]),
 
                 Forms\Components\Section::make('Social Media')
+                    ->description('Leave a field blank to hide that icon in the footer.')
                     ->schema([
                         Forms\Components\TextInput::make('social_facebook')->url()->label('Facebook URL'),
                         Forms\Components\TextInput::make('social_instagram')->url()->label('Instagram URL'),
                         Forms\Components\TextInput::make('social_twitter')->url()->label('Twitter / X URL'),
+                        Forms\Components\TextInput::make('social_linkedin')->url()->label('LinkedIn URL'),
+                        Forms\Components\TextInput::make('social_youtube')->url()->label('YouTube URL'),
+                        Forms\Components\TextInput::make('social_tiktok')->url()->label('TikTok URL'),
                     ])->columns(3),
 
                 Forms\Components\Section::make('SEO & Analytics')
@@ -116,8 +121,10 @@ class Settings extends Page
             'site_phone' => 'contact', 'site_phone_href' => 'contact',
             'site_email' => 'contact', 'site_whatsapp' => 'contact',
             'site_hours' => 'contact',
-            'footer_copyright' => 'footer', 'social_facebook' => 'general',
-            'social_instagram' => 'general', 'social_twitter' => 'general',
+            'footer_copyright' => 'footer', 'social_facebook' => 'social',
+            'social_instagram' => 'social', 'social_twitter' => 'social',
+            'social_linkedin' => 'social', 'social_youtube' => 'social',
+            'social_tiktok' => 'social',
             'meta_title_suffix' => 'seo', 'google_analytics_id' => 'seo',
             'header_scripts' => 'scripts', 'body_scripts' => 'scripts',
             'footer_scripts' => 'scripts',

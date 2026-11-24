@@ -106,11 +106,26 @@ class AppServiceProvider extends ServiceProvider
             'footer_scripts' => 'footer_scripts',
         ];
 
-        $values = Setting::whereIn('key', array_keys($map))->pluck('value', 'key');
+        $socialMap = [
+            'social_facebook' => 'facebook',
+            'social_instagram' => 'instagram',
+            'social_twitter' => 'twitter',
+            'social_linkedin' => 'linkedin',
+            'social_youtube' => 'youtube',
+            'social_tiktok' => 'tiktok',
+        ];
+
+        $values = Setting::whereIn('key', [...array_keys($map), ...array_keys($socialMap)])->pluck('value', 'key');
 
         foreach ($map as $settingKey => $configKey) {
             if (filled($values[$settingKey] ?? null)) {
                 config(["site.{$configKey}" => $values[$settingKey]]);
+            }
+        }
+
+        foreach ($socialMap as $settingKey => $configKey) {
+            if (filled($values[$settingKey] ?? null)) {
+                config(["site.social.{$configKey}" => $values[$settingKey]]);
             }
         }
     }

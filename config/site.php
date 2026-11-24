@@ -15,4 +15,15 @@ return [
     'header_scripts' => env('SITE_HEADER_SCRIPTS', ''),
     'body_scripts'   => env('SITE_BODY_SCRIPTS', ''),
     'footer_scripts' => env('SITE_FOOTER_SCRIPTS', ''),
+
+    // Social links, editable from Admin → Site Settings → Social Media.
+    // Blank hides the icon in the footer — see components/footer.blade.php.
+    'social' => [
+        'facebook'  => '',
+        'instagram' => '',
+        'twitter'   => '',
+        'linkedin'  => '',
+        'youtube'   => '',
+        'tiktok'    => '',
+    ],
 ];

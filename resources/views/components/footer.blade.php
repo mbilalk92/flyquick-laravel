@@ -7,6 +7,15 @@
 
     $planItems = optional(\App\Models\Menu::where('location', 'footer_plan')->first())->items?->where('is_active', true);
     $companyItems = optional(\App\Models\Menu::where('location', 'footer_company')->first())->items?->where('is_active', true);
+
+    $socialLinks = array_filter([
+        'facebook'  => ['url' => config('site.social.facebook'),  'icon' => 'fa-facebook-f', 'label' => 'Facebook'],
+        'instagram' => ['url' => config('site.social.instagram'), 'icon' => 'fa-instagram',  'label' => 'Instagram'],
+        'twitter'   => ['url' => config('site.social.twitter'),   'icon' => 'fa-x-twitter',  'label' => 'Twitter / X'],
+        'linkedin'  => ['url' => config('site.social.linkedin'),  'icon' => 'fa-linkedin-in','label' => 'LinkedIn'],
+        'youtube'   => ['url' => config('site.social.youtube'),   'icon' => 'fa-youtube',    'label' => 'YouTube'],
+        'tiktok'    => ['url' => config('site.social.tiktok'),    'icon' => 'fa-tiktok',     'label' => 'TikTok'],
+    ], fn ($link) => filled($link['url']));
 @endphp
 <section class="closing-cta">
     <div class="site-shell closing-cta-inner">
@@ -26,6 +35,15 @@
             <img src="/assets/images/flyquick-logo.png" alt="Fly Quick" width="284" height="80">
             <p>Flights, stays and journeys made easier with personal support from an Australian travel agency.</p>
             <p class="legal-name">Fly Quick Pty Ltd · Australian owned · Serving travellers since 2021</p>
+            @if($socialLinks)
+            <div class="footer-social" aria-label="Follow Fly Quick on social media">
+                @foreach($socialLinks as $social)
+                <a href="{{ $social['url'] }}" target="_blank" rel="noopener" aria-label="{{ $social['label'] }}">
+                    <i class="fa-brands {{ $social['icon'] }}" aria-hidden="true"></i>
+                </a>
+                @endforeach
+            </div>
+            @endif
         </div>
         <div>
             <h3>Plan your trip</h3>
