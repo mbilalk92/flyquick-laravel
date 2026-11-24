@@ -49,6 +49,10 @@ html, body {
 div#DEACombinedSearchPanel { margin-top: 0; padding-top: 0; margin-bottom: 0; padding-bottom: 0; }
 
 .fly-search-panel .divDEACombinedSearchPanel .md-datepicker-calendar-icon { color: #00aee8; }
+/* Angular Material's default "accent" color is pink (#ff4081) — used for
+   the checked checkbox fill (Flexible dates, Direct flight, etc). */
+.fly-search-panel md-checkbox.md-checked .md-icon { background-color: #00aee8 !important; }
+.fly-search-panel md-checkbox.md-checked { color: #00aee8; }
 [id^="searchButton"] { background: #00aee8 !important; border-color: #00aee8 !important; }
 .divDEACombinedSearchPanel .div_greybox input { color: #999999 !important; }
 .divDEACombinedSearchPanel .div_greybox { color: #00aee8 !important; }
