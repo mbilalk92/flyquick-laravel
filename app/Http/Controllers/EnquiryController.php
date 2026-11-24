@@ -31,19 +31,31 @@ class EnquiryController extends Controller
         }
 
         $data = $request->validate([
-            'name'         => 'required|string|min:2|max:255',
-            'email'        => 'required|email|max:255',
-            'phone'        => 'required|string|min:8|max:50',
-            'travel_type'  => 'nullable|string|max:100',
-            'company_name' => 'nullable|string|max:255',
-            'message'      => 'required|string|min:10',
-            'consent'      => 'required|accepted',
+            'name'           => 'required|string|min:2|max:255',
+            'email'          => 'required|email|max:255',
+            'phone'          => 'required|string|min:8|max:50',
+            'travel_type'    => 'nullable|string|max:100',
+            'company_name'   => 'nullable|string|max:255',
+            'origin'         => 'nullable|string|max:255',
+            'destination'    => 'nullable|string|max:255',
+            'departure_date' => 'nullable|date|after_or_equal:today',
+            'return_date'    => 'nullable|date|after_or_equal:departure_date',
+            'travellers'     => 'nullable|integer|min:1|max:50',
+            'message'        => 'required|string|min:10',
+            'consent'        => 'required|accepted',
         ]);
 
+        $dates = trim(
+            ($data['departure_date'] ?? '')
+            . (($data['departure_date'] ?? null) && ($data['return_date'] ?? null) ? ' – ' : '')
+            . ($data['return_date'] ?? '')
+        );
+
         $data['subject'] = trim(
-            ($request->input('origin') ? $request->input('origin') . ' → ' : '')
-            . ($request->input('destination') ?: '')
-            . ($request->input('dates') ? ' · ' . $request->input('dates') : '')
+            ($data['origin'] ? $data['origin'] . ' → ' : '')
+            . ($data['destination'] ?: '')
+            . ($dates ? ' · ' . $dates : '')
+            . (($data['travellers'] ?? null) ? ' · ' . $data['travellers'] . ' traveller(s)' : '')
         ) ?: null;
 
         ContactEnquiry::create([
