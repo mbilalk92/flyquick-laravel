@@ -7,6 +7,9 @@
 
 <!-- Sabre / DEAgentBooking styles -->
 <link rel="stylesheet" href="https://flights.flyquick.com.au/Portals/_default/Skins/DEAgentBooking/bootstrap/css/bootstrap.min.css?ts=20230821024238">
+<!-- Angular Material's chevrons etc. render as literal text (e.g. "expand_more")
+     without this — Angular Material itself doesn't ship the icon font. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://flights.flyquick.com.au/Resources/Shared/components/Angular-Material/1.1.21/angular-material.min.css">
 <link rel="stylesheet" href="https://flights.flyquick.com.au/Resources/Shared/components/angularjs-slider/6.4.3/rzslider.min.css">
 <link rel="stylesheet" href="https://flights.flyquick.com.au/min/css/searchbox.css?ts=20230821024238">
@@ -46,11 +49,14 @@ html, body {
 div#DEACombinedSearchPanel { margin-top: 0; padding-top: 0; margin-bottom: 0; padding-bottom: 0; }
 
 .fly-search-panel .divDEACombinedSearchPanel .md-datepicker-calendar-icon { color: #00aee8; }
-[id^="searchButton"] { background: #00aee8 !important; }
+[id^="searchButton"] { background: #00aee8 !important; border-color: #00aee8 !important; }
 .divDEACombinedSearchPanel .div_greybox input { color: #999999 !important; }
 .divDEACombinedSearchPanel .div_greybox { color: #00aee8 !important; }
 #ddlCabin { color: #999999; }
-.tripTypeButton .btn-danger { background-color: #00aee8 !important; }
+/* Bootstrap's .btn-danger keeps its red border-color; only the background
+   was being overridden, leaving a red outline around the selected
+   Round Trip / One Way / Multi-City button. */
+.tripTypeButton .btn-danger { background-color: #00aee8 !important; border-color: #00aee8 !important; }
 
 /* ── Responsive (from reference widget — container widths removed for full-width layout) ── */
 @media only screen and (min-width: 600px) and (max-width: 700px) {
