@@ -113,9 +113,9 @@ class PageSectionsRelationManager extends RelationManager
             'features' => ['heading', 'feature_items'],
             'faq' => ['heading', 'faq_items'],
             'rich-text' => ['content'],
-            'packages' => ['packages'],
+            'packages' => ['eyebrow', 'heading', 'intro', 'packages'],
             'location-intro' => ['name', 'intro_heading', 'intro', 'features'],
-            'offers' => ['offer_cards'],
+            'offers' => ['eyebrow', 'heading', 'intro', 'offer_cards'],
             'hero' => ['eyebrow', 'heading_line1', 'heading_line2', 'lead', 'cta_label', 'cta_href', 'phone_label', 'proof1', 'proof2', 'image_media_id', 'image_url', 'image_alt'],
             'trust-row' => ['items'],
             'services' => ['eyebrow', 'heading', 'intro', 'cards'],
@@ -389,6 +389,14 @@ class PageSectionsRelationManager extends RelationManager
                 // ── packages ────────────────────────────────────────────
                 Forms\Components\Section::make('Package cards')
                     ->schema(static::dehydrateWhen('packages', [
+                        Forms\Components\TextInput::make('data.eyebrow')
+                            ->label('Eyebrow label'),
+                        Forms\Components\TextInput::make('data.heading')
+                            ->label('Heading (use <br> for a line break)'),
+                        Forms\Components\Textarea::make('data.intro')
+                            ->label('Intro paragraph')
+                            ->rows(2)
+                            ->columnSpanFull(),
                         Forms\Components\Repeater::make('data.packages')
                             ->label('Package cards')
                             ->schema([
@@ -412,12 +420,19 @@ class PageSectionsRelationManager extends RelationManager
                                     ->label('Image URL (auto-filled or manual)')
                                     ->placeholder('/assets/images/destinations/pakistan.webp')
                                     ->columnSpan(2),
+                                Forms\Components\TextInput::make('link')
+                                    ->label('Card link URL (internal path or full external URL)')
+                                    ->placeholder('/flights/ or https://example.com'),
+                                Forms\Components\TextInput::make('label')
+                                    ->label('Link label')
+                                    ->placeholder('Ask for current options →'),
                             ])
                             ->columns(2)
                             ->defaultItems(1)
                             ->reorderable()
                             ->columnSpanFull(),
                     ]))
+                    ->columns(2)
                     ->columnSpanFull()
                     ->visible(fn (Get $get) => $get('section_type') === 'packages'),
 
@@ -451,9 +466,17 @@ class PageSectionsRelationManager extends RelationManager
                 // ── offers ──────────────────────────────────────────────
                 Forms\Components\Section::make('Offer cards')
                     ->schema(static::dehydrateWhen('offers', [
+                        Forms\Components\TextInput::make('data.eyebrow')
+                            ->label('Eyebrow label'),
+                        Forms\Components\TextInput::make('data.heading')
+                            ->label('Heading (use <br> for a line break)'),
+                        Forms\Components\Textarea::make('data.intro')
+                            ->label('Intro paragraph')
+                            ->rows(2)
+                            ->columnSpanFull(),
                         Forms\Components\Placeholder::make('_offers_hint')
                             ->label('')
-                            ->content('Leave empty to use the default Pakistan / Bali / Umrah cards.')
+                            ->content('Leave cards empty to use the default Pakistan / Bali / Umrah cards.')
                             ->columnSpanFull(),
                         Forms\Components\Repeater::make('data.offer_cards')
                             ->label('Custom offer cards')
@@ -478,6 +501,7 @@ class PageSectionsRelationManager extends RelationManager
                             ->reorderable()
                             ->columnSpanFull(),
                     ]))
+                    ->columns(2)
                     ->columnSpanFull()
                     ->visible(fn (Get $get) => $get('section_type') === 'offers'),
 
