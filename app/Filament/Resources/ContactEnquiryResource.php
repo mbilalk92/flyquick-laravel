@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class ContactEnquiryResource extends Resource
 {
@@ -74,6 +75,15 @@ class ContactEnquiryResource extends Resource
     public static function canCreate(): bool
     {
         return false;
+    }
+
+    /**
+     * Editors can read and mark enquiries as read, but deleting a customer
+     * enquiry record outright is admin-only.
+     */
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
     }
 
     public static function getPages(): array

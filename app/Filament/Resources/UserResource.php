@@ -18,6 +18,15 @@ class UserResource extends Resource
     protected static ?string $navigationGroup = 'Configuration';
     protected static ?int $navigationSort = 2;
 
+    /**
+     * Admin-only: managing who has admin access and what role they hold
+     * isn't something an editor should be able to see or change.
+     */
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([

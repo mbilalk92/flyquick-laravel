@@ -15,6 +15,15 @@ class Settings extends Page
     protected static ?string $navigationGroup = 'Configuration';
     protected static ?string $navigationLabel = 'Site Settings';
 
+    /**
+     * Admin-only: contact details are site-wide, and Custom Scripts injects
+     * raw HTML/JS into every page — not something an editor should control.
+     */
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
     public ?array $data = [];
 
     public function mount(): void

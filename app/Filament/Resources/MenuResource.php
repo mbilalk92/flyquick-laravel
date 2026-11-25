@@ -17,6 +17,15 @@ class MenuResource extends Resource
     protected static ?string $navigationGroup = 'Navigation';
     protected static ?int $navigationSort = 1;
 
+    /**
+     * Admin-only: this drives site-wide header/footer navigation — an
+     * editor editing it affects every page, not just their own content.
+     */
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([

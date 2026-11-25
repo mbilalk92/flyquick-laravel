@@ -22,6 +22,11 @@ class User extends Authenticatable implements FilamentUser, TwoFactorAuthenticat
         return $this->hasRole(['admin', 'editor']);
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
     /**
      * The attributes that are mass assignable.
      *

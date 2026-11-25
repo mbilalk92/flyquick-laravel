@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class PageResource extends Resource
 {
@@ -17,6 +18,15 @@ class PageResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationGroup = 'Content';
     protected static ?int $navigationSort = 1;
+
+    /**
+     * Editors create/edit page content day to day, but deleting a page
+     * (and its sections) is structural — admin-only.
+     */
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
 
     public static function form(Form $form): Form
     {
